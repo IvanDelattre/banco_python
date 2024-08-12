@@ -1,0 +1,17 @@
+----IMPLEMENTAÇÃO DO BANCO----
+Definir 3 operações: depósito , saque, extrato
+
+-DEPÓSITO:
+1 usuário
+depoisito armazenado em 1 variael
+depositos exibidos na operação extrato 
+(na operação extrato deve estar informado quantos depóstivos e vlor de cada 1)
+
+-SAQUE :
+3 saques diários com limite de 500 reais por saque
+caso não tenha saldo , informar que não é possível sacar por falto de saldo
+saques armazenados em variável e exibidos na operação extrato
+
+-EXTRATO :
+listar todos os depósitos e sques realizados na conta
+no fim mostrar saldo atual da conta			
