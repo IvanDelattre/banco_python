@@ -1,9 +1,10 @@
-def function(lista):
-    lista.append(5)
+dicionario = dict()
 
-lista = [1,2,3,4]
+dicionario['extrato'] = ''
+
+dicionario['extrato'] += 'adicionando '
+dicionario['extrato'] += 'adicionando 2'
+
+print(dicionario['extrato'])
 
 
-function(lista)
-
-print(lista)
