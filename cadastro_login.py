@@ -1,5 +1,5 @@
 menu_incial  = '''
-======== AGIOTA 'S COMPANY ========
+=============== AGIOTA 'S COMPANY ===============
 
 [c] cadastrar
 [k] criar conta - apenas após criar usuário
@@ -8,20 +8,14 @@ menu_incial  = '''
 
 => '''
 
-menu_login = '''
-======== BEM VINDO ========
-[e] extrato
-[s] sacar
-[d] depósito
-[s] sair da conta
 
-'''
 
-def inicio():
+usuarios = []
+contas = []
+
+
+def inicio(usuarios,contas):
     
-    usuarios = []
-    contas = []
-
     print(menu_incial,end=' ')
     operation = input()
     while True :
@@ -30,7 +24,7 @@ def inicio():
             usuarios , contas = criar_user(usuarios, contas )
 
         elif operation == 'l' :
-            print('implementar')
+            contas = login_incio(contas)
 
         elif operation == 'c' :
             print('implementar')
@@ -53,7 +47,6 @@ def percorrer_usuario(usuarios, user):
     for elemento in usuarios :
         if elemento['cpf'] == user['cpf']:
             return True
-        
     return False
 
 
@@ -116,6 +109,7 @@ def criar_conta(contas, usuarios):
     
 
     account['position'] = len(contas) + 1
+    account['saldo'] = 0
     account['extrato'] = ''
     
 
@@ -132,7 +126,167 @@ def criar_conta(contas, usuarios):
     
     return contas
 
-inicio()
+
+def encontrar_conta(contas, account):
+    for elemento in contas:
+
+        if elemento['pessoa']['nome'] == account['nome']:
+            
+            account['conta'] = elemento  
+
+
+            return True
+    return False
+
+
+
+def login_incio(contas):
+    print('\n====================== Login  ======================\n')
+    account = dict()
+    account['nome'] = input('Digite Nome completo do usuário: ')
+    account['nome'] = account['nome'].strip()
+    #se nome usuário  não for encontado
+    while encontrar_conta(contas, account) == False :
+        print('\n<< Usuário não encontrado >>>\n')
+        if ( input('Continuar com a trilha de Login? [s/n]') == 'n'):
+            inicio()
+        account['nome'] = input('Digite Nome completo do usuário: ')
+
+    del account['nome']
+    cliente = account['conta'].copy()
+    
+
+    senha = input(f'Digite senha de {cliente['pessoa']['nome'] } :')
+    
+    while senha != cliente['senha'] :
+
+        print('\n<< @@Senha Incorreta ***>>\n')
+        decision = input(f'''Opções :
+        - sair da trilha de login [n]
+        - trocar de usuário atual : {cliente['pessoa']['nome']} [l]
+        - continuar no usuário atual [s] => ''')
+        if decision == 'n':
+            inicio()
+        elif decision == 'l':
+            login_incio(contas)
+        
+        senha = input(f'Digite senha de {cliente['pessoa']['nome'] } :')
+
+    #a partir desse bloco de código a senha está correta
+    print('\n<<< Perfil Logado ***>>>\n')
+
+
+    print('\n====================================================\n')
+    contas = interface_perfil(cliente,contas)
+
+    return contas
+
+
+
+def interface_perfil(cliente, contas):
+    account = dict()
+    for elemento in contas :
+        if cliente['pessoa']['nome'] == elemento['pessoa']['nome']:
+            account = elemento
+
+
+    menu_login = f'''
+=============== Bem Vindo {cliente['pessoa']['nome']} ===============
+[e] extrato
+[s] sacar
+[d] depósito
+[sa] sair da conta
+[i] informações da conta
+=>'''
+    print(menu_login,end=' ')
+    op = input()
+    while True :
+
+        if op == 'e':
+            extrato(account)
+
+        elif op == 's':
+            account = saque(account)
+
+        elif op == 'd':
+            depositar(account)
+
+        elif op == 'sa':
+            print('<< Saindo da Conta ***>>')
+            break
+
+        elif op == 'i':
+            info_conta(account)
+        else:
+            print('<< OPERAÇÃO INVÁLIDA >>')
+
+        print(menu_login)
+        op = input()
+    
+    print('=========== ======================================== ===========')
+
+    return contas 
+
+
+
+def depositar(account):
+    print('\n==================== Depósito ====================\n')
+
+    deposito = float(input('Digite valor do depósito: R$ '))
+    account['saldo'] += deposito
+
+    account['extrato'] += f'Depósito de R${deposito}\n'
+
+    print('\n<<< Depósito Realizado com sucesso ****>>>\n' )
+
+    print('==================== ======== ==================== ')
+
+
+
+
+def info_conta(account):
+    print('\n====================_DADOS_CONTA_====================\n')
+
+    print(f'Nome Usuário : {account['pessoa']['nome']}')
+
+    print(f'CPF do usuário: {account['pessoa']['cpf'] }')
+
+    print(f'Numéro da conta: {account['position']}')
+
+    print(f'Conta corrente : {account['saldo']}')
+
+    print('\n=====================================================\n')
+
+
+def extrato(account):
+    print('\n==================== Extrato ====================\n')
+    print('Registro de operações:')
+    print(account['extrato'])
+
+    print(f'Saldo Final : R${account['saldo']}')
+
+    print('\n==================== ======= ====================\n')
+
+
+def saque(account):
+    saque = float(input('Digite Valor de Saque R$ '))
+
+    if saque > account['saldo']:
+        print('<< Valor de saque Não dispónivel na conta >>>')
+        print(f'Saldo na conta: {account['saldo']}\n' )
+        return account 
+    account['saldo'] -= saque
+    account['extrato'] += f'Saque realizado no valor de R${saque}'
+
+    return account
+
+
+
+
+inicio(usuarios, contas)
+
+
+
 
     
 
