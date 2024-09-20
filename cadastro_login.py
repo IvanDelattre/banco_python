@@ -119,10 +119,7 @@ def criar_conta(contas, usuarios):
     print('<< Conta criada com sucesso ***>>')
     print('\n=========================================================\n')
     
-    print(f'conta {usuarios}')
-
-    print(f'conta {account}')
-    print(f'contas {contas}')
+    
     
     return contas
 
@@ -137,7 +134,6 @@ def encontrar_conta(contas, account):
 
             return True
     return False
-
 
 
 def login_incio(contas):
@@ -220,7 +216,7 @@ def interface_perfil(cliente, contas):
         else:
             print('<< OPERAÇÃO INVÁLIDA >>')
 
-        print(menu_login)
+        print(menu_login,end=' ')
         op = input()
     
     print('=========== ======================================== ===========')
@@ -277,6 +273,8 @@ def saque(account):
         return account 
     account['saldo'] -= saque
     account['extrato'] += f'Saque realizado no valor de R${saque}'
+
+    print('\n<<< Saque Realizado com sucesso ****>>>\n' )
 
     return account
 
